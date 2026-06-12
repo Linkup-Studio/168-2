@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タイムカード</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    background: #f4f1ea;
+    min-height: 100vh;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 560px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 20px; color: #8a2f2f; text-align: center; margin-bottom: 4px; }
+  .rule { font-size: 12px; color: #888; text-align: center; margin-bottom: 16px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab {
+    flex: 1; padding: 10px 0; border: none; border-radius: 8px;
+    background: #eee8dc; color: #555; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .tab.active { background: #8a2f2f; color: #fff; }
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* 打刻 */
+  .date { font-size: 15px; color: #555; text-align: center; }
+  .clock { font-size: 44px; font-weight: 700; letter-spacing: 2px; color: #333; text-align: center; margin: 4px 0 20px; }
+  input[type="text"] {
+    width: 100%; font-size: 17px; padding: 12px; border: 1px solid #ccc;
+    border-radius: 8px; margin-bottom: 16px; text-align: center;
+  }
+  .buttons { display: flex; gap: 12px; margin-bottom: 16px; }
+  .buttons button {
+    flex: 1; font-size: 18px; font-weight: 700; padding: 18px 0; border: none;
+    border-radius: 10px; color: #fff; cursor: pointer;
+  }
+  .buttons button:disabled { opacity: .4; cursor: not-allowed; }
+  .in { background: #2e7d4f; }
+  .out { background: #8a2f2f; }
+  #message { min-height: 48px; font-size: 14px; color: #444; white-space: pre-line; line-height: 1.6; text-align: center; }
+  #message.error { color: #c62828; }
+  .status { font-size: 13px; color: #777; text-align: center; margin-bottom: 12px; }
+
+  /* 記録・集計 */
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .toolbar input[type="month"] {
+    font-size: 15px; padding: 8px; border: 1px solid #ccc; border-radius: 8px;
+  }
+  .toolbar button {
+    padding: 9px 14px; border: 1px solid #8a2f2f; border-radius: 8px;
+    background: #fff; color: #8a2f2f; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 8px 6px; border-bottom: 1px solid #eee; text-align: center; white-space: nowrap; }
+  th { background: #faf7f0; color: #666; font-weight: 700; }
+  .empty { color: #999; text-align: center; padding: 24px 0; font-size: 14px; }
+  .del { color: #c62828; cursor: pointer; border: none; background: none; font-size: 13px; }
+  .table-wrap { overflow-x: auto; }
+  .note { font-size: 11px; color: #999; text-align: center; max-width: 560px; line-height: 1.7; }
+  .sum-row td { font-weight: 700; background: #faf7f0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>タイムカード</h1>
+    <p class="rule">定時 8:00〜17:00(休憩 12:00〜13:00)/ 早出・残業は15分単位</p>
+
+    <div class="tabs">
+      <button class="tab active" data-pane="punch">打刻</button>
+      <button class="tab" data-pane="records">記録</button>
+      <button class="tab" data-pane="summary">月次集計</button>
+    </div>
+
+    <!-- 打刻 -->
+    <div class="pane active" id="pane-punch">
+      <p class="date" id="date"></p>
+      <p class="clock" id="clock">--:--:--</p>
+      <input type="text" id="name" placeholder="氏名を入力" autocomplete="name">
+      <p class="status" id="status"></p>
+      <div class="buttons">
+        <button class="in" id="btnIn">出 勤</button>
+        <button class="out" id="btnOut">退 勤</button>
+      </div>
+      <p id="message"></p>
+    </div>
+
+    <!-- 記録 -->
+    <div class="pane" id="pane-records">
+      <div class="toolbar">
+        <input type="month" id="recMonth">
+        <button id="btnCsv">CSVダウンロード</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>日付</th><th>氏名</th><th>出勤</th><th>退勤</th><th>所定内</th><th>早出</th><th>残業</th><th>合計</th><th></th></tr>
+          </thead>
+          <tbody id="recBody"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="recEmpty" style="display:none">この月の記録はありません</p>
+    </div>
+
+    <!-- 月次集計 -->
+    <div class="pane" id="pane-summary">
+      <div class="toolbar">
+        <input type="month" id="sumMonth">
+        <button id="btnSumCsv">CSVダウンロード</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>氏名</th><th>出勤日数</th><th>所定内</th><th>早出</th><th>残業</th><th>就業時間合計</th></tr>
+          </thead>
+          <tbody id="sumBody"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="sumEmpty" style="display:none">この月の記録はありません</p>
+    </div>
+  </div>
+
+  <p class="note">
+    データはこの端末のブラウザ内に保存されます(時間の単位はすべて「時間」、例 0.25 = 15分)。<br>
+    端末の変更・初期化に備えて、月末にCSVダウンロードでの保存をおすすめします。
+  </p>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- 勤務ルール ----
+  var WORK_START = 8 * 60;   // 8:00
+  var WORK_END = 17 * 60;    // 17:00
+  var BREAK_START = 12 * 60; // 12:00
+  var BREAK_END = 13 * 60;   // 13:00
+  var ROUND_UNIT = 15;       // 早出・残業の丸め単位(分・切り捨て)
+
+  var STORE_KEY = 'timecard_records_v1';
+  var NAME_KEY = 'timecard_name';
+
+  // ---- ストレージ ----
+  function loadRecords() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function saveRecords(records) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(records));
+  }
+
+  // ---- 日時ユーティリティ ----
+  function pad(n) { return ('0' + n).slice(-2); }
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  function nowStr() {
+    var d = new Date();
+    return pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function monthStr(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1);
+  }
+  function toMinutes(hhmm) {
+    var p = hhmm.split(':');
+    return Number(p[0]) * 60 + Number(p[1]);
+  }
+
+  // ---- 労働時間計算 ----
+  function overlap(aS, aE, bS, bE) {
+    return Math.max(0, Math.min(aE, bE) - Math.max(aS, bS));
+  }
+  function round2(n) { return Math.round(n * 100) / 100; }
+  function calc(clockIn, clockOut) {
+    var i = toMinutes(clockIn), o = toMinutes(clockOut);
+    if (o < i) o = i;
+    var reg = overlap(i, o, WORK_START, WORK_END) - overlap(i, o, BREAK_START, BREAK_END);
+    if (reg < 0) reg = 0;
+    var early = Math.floor(Math.max(0, WORK_START - i) / ROUND_UNIT) * ROUND_UNIT;
+    var ot = Math.floor(Math.max(0, o - WORK_END) / ROUND_UNIT) * ROUND_UNIT;
+    return {
+      reg: round2(reg / 60),
+      early: round2(early / 60),
+      ot: round2(ot / 60),
+      total: round2((reg + early + ot) / 60)
+    };
+  }
+
+  // ---- 打刻 ----
+  var nameInput = document.getElementById('name');
+  var statusEl = document.getElementById('status');
+  var messageEl = document.getElementById('message');
+
+  function findToday(records, name) {
+    var t = todayStr();
+    for (var i = 0; i < records.length; i++) {
+      if (records[i].date === t && records[i].name === name) return i;
+    }
+    return -1;
+  }
+
+  function showMessage(text, isError) {
+    messageEl.textContent = text;
+    messageEl.className = isError ? 'error' : '';
+  }
+
+  function refreshStatus() {
+    var name = nameInput.value.trim();
+    if (!name) { statusEl.textContent = ''; return; }
+    var records = loadRecords();
+    var idx = findToday(records, name);
+    if (idx === -1) {
+      statusEl.textContent = '本日は未打刻です';
+    } else if (!records[idx].out) {
+      statusEl.textContent = '出勤中(出勤 ' + records[idx].in + ')';
+    } else {
+      statusEl.textContent = '退勤済み(出勤 ' + records[idx].in + ' / 退勤 ' + records[idx].out + ')';
+    }
+  }
+
+  document.getElementById('btnIn').addEventListener('click', function () {
+    var name = nameInput.value.trim();
+    if (!name) { showMessage('氏名を入力してください。', true); return; }
+    localStorage.setItem(NAME_KEY, name);
+    var records = loadRecords();
+    if (findToday(records, name) !== -1) {
+      showMessage('本日はすでに出勤打刻済みです。', true);
+      return;
+    }
+    var t = nowStr();
+    records.push({ date: todayStr(), name: name, in: t, out: null, reg: 0, early: 0, ot: 0, total: 0 });
+    saveRecords(records);
+    showMessage(name + ' さん、出勤打刻しました(' + t + ')。', false);
+    refreshStatus();
+    renderRecords();
+  });
+
+  document.getElementById('btnOut').addEventListener('click', function () {
+    var name = nameInput.value.trim();
+    if (!name) { showMessage('氏名を入力してください。', true); return; }
+    localStorage.setItem(NAME_KEY, name);
+    var records = loadRecords();
+    var idx = findToday(records, name);
+    if (idx === -1) {
+      showMessage('本日の出勤打刻が見つかりません。先に出勤打刻をしてください。', true);
+      return;
+    }
+    if (records[idx].out) {
+      showMessage('本日はすでに退勤打刻済みです。', true);
+      return;
+    }
+    var t = nowStr();
+    var r = calc(records[idx].in, t);
+    records[idx].out = t;
+    records[idx].reg = r.reg;
+    records[idx].early = r.early;
+    records[idx].ot = r.ot;
+    records[idx].total = r.total;
+    saveRecords(records);
+    showMessage(
+      name + ' さん、退勤打刻しました(' + t + ')。\n' +
+      '所定内 ' + r.reg + 'h / 早出 ' + r.early + 'h / 残業 ' + r.ot + 'h / 合計 ' + r.total + 'h',
+      false
+    );
+    refreshStatus();
+    renderRecords();
+  });
+
+  // ---- 時計 ----
+  function tick() {
+    var now = new Date();
+    document.getElementById('clock').textContent =
+      pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    var days = ['日', '月', '火', '水', '木', '金', '土'];
+    document.getElementById('date').textContent =
+      now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日(' + days[now.getDay()] + ')';
+  }
+  setInterval(tick, 1000);
+  tick();
+
+  // ---- タブ ----
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.pane').forEach(function (p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('pane-' + tab.dataset.pane).classList.add('active');
+      if (tab.dataset.pane === 'records') renderRecords();
+      if (tab.dataset.pane === 'summary') renderSummary();
+    });
+  });
+
+  // ---- 記録一覧 ----
+  var recMonth = document.getElementById('recMonth');
+  recMonth.value = monthStr(new Date());
+  recMonth.addEventListener('change', renderRecords);
+
+  function recordsOf(month) {
+    return loadRecords().filter(function (r) { return r.date.indexOf(month) === 0; });
+  }
+
+  function renderRecords() {
+    var month = recMonth.value;
+    var rows = recordsOf(month).sort(function (a, b) {
+      return a.date === b.date ? (a.name < b.name ? -1 : 1) : (a.date < b.date ? -1 : 1);
+    });
+    var body = document.getElementById('recBody');
+    body.innerHTML = '';
+    document.getElementById('recEmpty').style.display = rows.length ? 'none' : 'block';
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      [r.date, r.name, r.in, r.out || '—',
+       r.out ? r.reg : '', r.out ? r.early : '', r.out ? r.ot : '', r.out ? r.total : ''
+      ].forEach(function (v) {
+        var td = document.createElement('td');
+        td.textContent = v;
+        tr.appendChild(td);
+      });
+      var tdDel = document.createElement('td');
+      var btn = document.createElement('button');
+      btn.className = 'del';
+      btn.textContent = '削除';
+      btn.addEventListener('click', function () {
+        if (!confirm(r.date + ' の ' + r.name + ' さんの記録を削除しますか?')) return;
+        var all = loadRecords().filter(function (x) {
+          return !(x.date === r.date && x.name === r.name);
+        });
+        saveRecords(all);
+        renderRecords();
+        refreshStatus();
+      });
+      tdDel.appendChild(btn);
+      tr.appendChild(tdDel);
+      body.appendChild(tr);
+    });
+  }
+
+  // ---- 月次集計 ----
+  var sumMonth = document.getElementById('sumMonth');
+  // 月初は前月分を見ることが多いので、1〜5日は前月を初期表示
+  (function () {
+    var d = new Date();
+    if (d.getDate() <= 5) d = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+    sumMonth.value = monthStr(d);
+  })();
+  sumMonth.addEventListener('change', renderSummary);
+
+  function summarize(month) {
+    var byName = {};
+    recordsOf(month).forEach(function (r) {
+      if (!r.out) return;
+      if (!byName[r.name]) byName[r.name] = { days: 0, reg: 0, early: 0, ot: 0, total: 0 };
+      var s = byName[r.name];
+      s.days += 1;
+      s.reg += r.reg; s.early += r.early; s.ot += r.ot; s.total += r.total;
+    });
+    return Object.keys(byName).sort().map(function (nm) {
+      var s = byName[nm];
+      return { name: nm, days: s.days, reg: round2(s.reg), early: round2(s.early), ot: round2(s.ot), total: round2(s.total) };
+    });
+  }
+
+  function renderSummary() {
+    var rows = summarize(sumMonth.value);
+    var body = document.getElementById('sumBody');
+    body.innerHTML = '';
+    document.getElementById('sumEmpty').style.display = rows.length ? 'none' : 'block';
+    rows.forEach(function (s) {
+      var tr = document.createElement('tr');
+      [s.name, s.days, s.reg, s.early, s.ot, s.total].forEach(function (v) {
+        var td = document.createElement('td');
+        td.textContent = v;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  // ---- CSV ----
+  function downloadCsv(filename, rows) {
+    var csv = rows.map(function (row) {
+      return row.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+    }).join('\r\n');
+    // Excelで文字化けしないようBOM付きUTF-8にする
+    var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  document.getElementById('btnCsv').addEventListener('click', function () {
+    var month = recMonth.value;
+    var rows = [['日付', '氏名', '出勤時刻', '退勤時刻', '所定内(時間)', '早出(時間)', '残業(時間)', '就業時間(時間)']];
+    recordsOf(month).sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (r) {
+      rows.push([r.date, r.name, r.in, r.out || '', r.out ? r.reg : '', r.out ? r.early : '', r.out ? r.ot : '', r.out ? r.total : '']);
+    });
+    downloadCsv('打刻記録_' + month + '.csv', rows);
+  });
+
+  document.getElementById('btnSumCsv').addEventListener('click', function () {
+    var month = sumMonth.value;
+    var rows = [['年月', '氏名', '出勤日数', '所定内(時間)', '早出(時間)', '残業(時間)', '就業時間合計(時間)']];
+    summarize(month).forEach(function (s) {
+      rows.push([month, s.name, s.days, s.reg, s.early, s.ot, s.total]);
+    });
+    downloadCsv('月次集計_' + month + '.csv', rows);
+  });
+
+  // ---- 初期化 ----
+  var saved = localStorage.getItem(NAME_KEY);
+  if (saved) { nameInput.value = saved; refreshStatus(); }
+  nameInput.addEventListener('change', refreshStatus);
+  renderRecords();
+})();
+</script>
+</body>
+</html>
