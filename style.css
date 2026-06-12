@@ -92,8 +92,28 @@ body {
   background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-bottom: var(--footer-bar-h);
+  padding-bottom: calc(var(--footer-bar-h) + env(safe-area-inset-bottom));
   overflow-x: hidden;
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* 日本語見出しを文節単位で折り返す（対応ブラウザのみ） */
+@supports (word-break: auto-phrase) {
+  .section-title,
+  .hero-title,
+  .hero-sub,
+  .mid-cta-text,
+  .contact-title,
+  .free-banner-main,
+  .strength-title,
+  .timeline-title,
+  .faq-question span:first-child {
+    word-break: auto-phrase;
+  }
 }
 
 a {
@@ -157,7 +177,7 @@ button {
 
 /* --- Section Common --- */
 .section {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-2xl) 0;
   position: relative;
 }
 
@@ -177,12 +197,13 @@ button {
 
 .section-title {
   font-family: var(--font-serif);
-  font-size: var(--fs-xl);
+  font-size: clamp(1.5rem, 5.8vw, 1.75rem);
   font-weight: 700;
   text-align: center;
   line-height: var(--lh-tight);
   color: var(--color-text);
   margin-bottom: var(--space-xl);
+  text-wrap: balance;
 }
 
 /* ============================================
@@ -277,7 +298,8 @@ button {
 .hero {
   position: relative;
   height: 80vh;
-  min-height: 500px;
+  height: 80svh; /* モバイルのアドレスバー変動に追従 */
+  min-height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -302,23 +324,23 @@ button {
 .hero-content {
   text-align: center;
   background-color: rgba(255, 255, 255, 0.85);
-  padding: 60px 40px;
+  padding: clamp(36px, 10vw, 60px) clamp(20px, 6vw, 40px);
   border-radius: 4px;
   max-width: 600px;
   margin: 0 20px;
 }
 
 .hero-sub {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 3.8vw, 1rem);
   color: var(--primary-color);
   margin-bottom: 20px;
   letter-spacing: 0.1em;
 }
 
 .hero-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
   line-height: 1.4;
-  margin-bottom: 30px;
+  margin-bottom: clamp(20px, 6vw, 30px);
   font-weight: 700;
   color: var(--text-color);
 }
@@ -523,7 +545,7 @@ button {
 }
 
 .free-banner-price span {
-  font-size: var(--fs-3xl);
+  font-size: clamp(2rem, 9vw, 2.5rem);
   font-weight: 700;
   color: var(--color-emphasis);
 }
@@ -543,7 +565,7 @@ button {
 .service-card {
   background: var(--color-white);
   border-radius: var(--radius-md);
-  padding: var(--space-lg) var(--space-sm);
+  padding: var(--space-lg) 12px;
   text-align: center;
   box-shadow: var(--shadow-sm);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -721,7 +743,7 @@ button {
 
 .mid-cta-text {
   font-family: var(--font-serif);
-  font-size: var(--fs-lg);
+  font-size: clamp(1.25rem, 5.6vw, 1.5rem);
   font-weight: 600;
   color: var(--color-white);
   margin-bottom: var(--space-lg);
@@ -812,7 +834,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-md);
   text-align: left;
   font-size: var(--fs-base);
   font-weight: 700;
@@ -870,11 +892,11 @@ button {
 }
 
 .faq-answer.open {
-  max-height: 300px;
+  max-height: 500px;
 }
 
 .faq-answer p {
-  padding: 0 var(--space-lg) var(--space-lg);
+  padding: 0 var(--space-md) var(--space-md);
   font-size: var(--fs-sm);
   color: var(--color-text-light);
   line-height: var(--lh-base);
@@ -959,7 +981,7 @@ button {
 
 .contact-title {
   font-family: var(--font-serif);
-  font-size: var(--fs-xl);
+  font-size: clamp(1.5rem, 6.4vw, 1.75rem);
   font-weight: 700;
   color: var(--color-white);
   line-height: var(--lh-tight);
@@ -971,6 +993,9 @@ button {
   color: rgba(255, 255, 255, 0.9);
   line-height: var(--lh-base);
   margin-bottom: var(--space-xl);
+  max-width: 30em;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact-cta {
@@ -991,7 +1016,7 @@ button {
 .footer {
   background: var(--color-text);
   color: rgba(255, 255, 255, 0.7);
-  padding: var(--space-xl) 0 calc(var(--space-xl) + var(--footer-bar-h));
+  padding: var(--space-xl) 0 calc(var(--space-xl) + var(--footer-bar-h) + env(safe-area-inset-bottom));
   text-align: center;
 }
 
@@ -1058,7 +1083,8 @@ button {
   right: 0;
   z-index: 998;
   display: flex;
-  height: var(--footer-bar-h);
+  height: calc(var(--footer-bar-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
   background: var(--color-white);
   box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(100%);
@@ -1096,7 +1122,7 @@ button {
    ============================================ */
 .scroll-top {
   position: fixed;
-  bottom: calc(var(--footer-bar-h) + 16px);
+  bottom: calc(var(--footer-bar-h) + env(safe-area-inset-bottom) + 16px);
   right: 16px;
   z-index: 997;
   width: 48px;
@@ -1169,6 +1195,7 @@ button {
     right: -100%;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     background-color: rgba(255, 255, 255, 0.98);
     transition: right 0.3s ease-in-out;
     z-index: 1050;
@@ -1213,13 +1240,57 @@ button {
   .hero {
     margin-top: 62px;
   }
+}
 
-  .hero-title {
-    font-size: 1.8rem;
+/* ============================================
+   SMALL MOBILE（max-width: 374px）
+   ============================================ */
+@media (max-width: 374px) {
+  .container {
+    padding: 0 16px;
   }
 
-  .hero-content {
-    padding: 50px 24px;
+  .mid-cta-text {
+    font-size: 1.125rem;
+  }
+
+  .mid-cta-box {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .logo {
+    font-size: 1.05rem;
+  }
+
+  .sub-logo {
+    font-size: 0.7rem;
+  }
+
+  .service-grid {
+    gap: 10px;
+  }
+
+  .service-card-title {
+    font-size: 0.9375rem;
+  }
+
+  .btn-lg {
+    padding: 16px 20px;
+  }
+
+  .btn-xl {
+    font-size: var(--fs-base);
+    padding: 18px 20px;
+  }
+
+  .timeline {
+    padding-left: 44px;
+  }
+
+  .timeline-number {
+    left: -44px;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -1233,6 +1304,10 @@ button {
   }
 
   .sp-only { display: none; }
+
+  .section {
+    padding: var(--space-3xl) 0;
+  }
 
   .section-title {
     font-size: var(--fs-2xl);
