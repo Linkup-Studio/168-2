@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>タイムカード</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: #f4f1ea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    h1 { font-size: 20px; color: #8a2f2f; margin-bottom: 4px; }
+    .rule { font-size: 12px; color: #888; margin-bottom: 20px; }
+    .date { font-size: 15px; color: #555; }
+    .clock { font-size: 44px; font-weight: 700; letter-spacing: 2px; color: #333; margin: 4px 0 20px; }
+    input[type="text"] {
+      width: 100%;
+      font-size: 17px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .buttons { display: flex; gap: 12px; margin-bottom: 16px; }
+    button {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 18px 0;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    button:disabled { opacity: .4; cursor: not-allowed; }
+    .in { background: #2e7d4f; }
+    .out { background: #8a2f2f; }
+    #message {
+      min-height: 48px;
+      font-size: 14px;
+      color: #444;
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+    #message.error { color: #c62828; }
+    .status { font-size: 13px; color: #777; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>タイムカード</h1>
+    <p class="rule">定時 8:00〜17:00(休憩 12:00〜13:00)/ 早出・残業は15分単位</p>
+    <p class="date" id="date"></p>
+    <p class="clock" id="clock">--:--:--</p>
+    <input type="text" id="name" placeholder="氏名を入力" autocomplete="name">
+    <p class="status" id="status"></p>
+    <div class="buttons">
+      <button class="in" id="btnIn" onclick="punch('punchIn')">出 勤</button>
+      <button class="out" id="btnOut" onclick="punch('punchOut')">退 勤</button>
+    </div>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    var nameInput = document.getElementById('name');
+    var statusEl = document.getElementById('status');
+    var messageEl = document.getElementById('message');
+    var btnIn = document.getElementById('btnIn');
+    var btnOut = document.getElementById('btnOut');
+
+    // 時計表示
+    function tick() {
+      var now = new Date();
+      var pad = function (n) { return ('0' + n).slice(-2); };
+      document.getElementById('clock').textContent =
+        pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+      var days = ['日', '月', '火', '水', '木', '金', '土'];
+      document.getElementById('date').textContent =
+        now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日(' + days[now.getDay()] + ')';
+    }
+    setInterval(tick, 1000);
+    tick();
+
+    // 前回入力した氏名を復元
+    try {
+      var saved = localStorage.getItem('timecard_name');
+      if (saved) { nameInput.value = saved; refreshStatus(); }
+    } catch (e) {}
+
+    nameInput.addEventListener('change', refreshStatus);
+
+    function setBusy(busy) {
+      btnIn.disabled = busy;
+      btnOut.disabled = busy;
+    }
+
+    function punch(fn) {
+      var name = nameInput.value.trim();
+      if (!name) {
+        showMessage('氏名を入力してください。', true);
+        return;
+      }
+      try { localStorage.setItem('timecard_name', name); } catch (e) {}
+
+      setBusy(true);
+      showMessage('打刻中...', false);
+      google.script.run
+        .withSuccessHandler(function (res) {
+          setBusy(false);
+          showMessage(res.message, !res.ok);
+          refreshStatus();
+        })
+        .withFailureHandler(function (err) {
+          setBusy(false);
+          showMessage('エラーが発生しました: ' + err.message, true);
+        })[fn](name);
+    }
+
+    function refreshStatus() {
+      var name = nameInput.value.trim();
+      if (!name) { statusEl.textContent = ''; return; }
+      google.script.run
+        .withSuccessHandler(function (s) {
+          if (!s.punchedIn) {
+            statusEl.textContent = '本日は未打刻です';
+          } else if (!s.punchedOut) {
+            statusEl.textContent = '出勤中(出勤 ' + s.clockIn + ')';
+          } else {
+            statusEl.textContent = '退勤済み(出勤 ' + s.clockIn + ' / 退勤 ' + s.clockOut + ')';
+          }
+        })
+        .getStatus(name);
+    }
+
+    function showMessage(text, isError) {
+      messageEl.textContent = text;
+      messageEl.className = isError ? 'error' : '';
+    }
+  </script>
+</body>
+</html>
