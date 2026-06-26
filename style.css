@@ -522,6 +522,27 @@ button {
   background: var(--color-white);
 }
 
+.service-intro {
+  background: var(--color-bg-warm);
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.service-intro-title {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.service-intro-text {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  line-height: var(--lh-base);
+}
+
 .free-banner {
   background: linear-gradient(135deg, var(--color-accent-pale) 0%, var(--color-bg-alt) 100%);
   border: 2px solid var(--color-emphasis);
