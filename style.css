@@ -454,8 +454,8 @@ button {
 }
 
 .thought-img {
-  width: 180px;
-  height: 180px;
+  width: 240px;
+  height: 240px;
   border-radius: var(--radius-full);
   object-fit: cover;
   border: 4px solid var(--color-white);
