@@ -1,0 +1,221 @@
+/* ============================================================
+   法定文書ページ共通スタイル
+   （運営規程 / 個人情報保護方針 / 虐待防止指針 / 苦情受付窓口）
+   style.css のデザイントークンを継承して使用
+   ============================================================ */
+
+.legal-main {
+  padding-top: 84px;          /* 固定ヘッダー分 */
+  padding-bottom: 96px;       /* 下部固定バー分 */
+  background: var(--color-bg-warm);
+  min-height: 100vh;
+}
+
+.legal-container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---- ページ見出し ---- */
+.legal-head {
+  text-align: center;
+  padding: var(--space-xl) 0 var(--space-lg);
+}
+
+.legal-head-en {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-xs);
+}
+
+.legal-title {
+  font-size: clamp(1.6rem, 6vw, 2.1rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.legal-subtitle {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+}
+
+/* ---- 本文カード ---- */
+.legal-body {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 5vw, 2.75rem);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.legal-lead {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid #ece8dd;
+}
+
+/* ---- 条・項 ---- */
+.legal-article {
+  margin-bottom: var(--space-xl);
+}
+.legal-article:last-child {
+  margin-bottom: 0;
+}
+
+.legal-article-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1.4;
+  margin-bottom: var(--space-sm);
+  padding-left: 14px;
+  border-left: 4px solid var(--color-accent);
+}
+
+.legal-text {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+.legal-text:last-child {
+  margin-bottom: 0;
+}
+
+/* 項番号付き段落 */
+.legal-para {
+  display: flex;
+  gap: 0.5em;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+.legal-para-num {
+  flex-shrink: 0;
+  color: var(--color-text-light);
+  font-weight: 700;
+}
+
+/* 箇条書き（一・二・三 や ①②③） */
+.legal-list {
+  list-style: none;
+  margin: var(--space-sm) 0 var(--space-sm) 0.25rem;
+  padding: 0;
+}
+.legal-list > li {
+  position: relative;
+  padding-left: 2em;
+  margin-bottom: var(--space-xs);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--color-text);
+}
+.legal-list > li::before {
+  content: attr(data-mark);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* ---- 連絡先テーブル ---- */
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+  font-size: var(--fs-sm);
+}
+.legal-table th,
+.legal-table td {
+  border: 1px solid #e5e0d5;
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.6;
+}
+.legal-table th {
+  background: var(--color-bg-alt);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.legal-table a {
+  color: var(--color-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ---- 強調された連絡先カード ---- */
+.legal-contact-card {
+  background: var(--color-accent-pale);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin: var(--space-md) 0;
+}
+.legal-contact-card p {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  margin: 0;
+}
+.legal-contact-card .legal-tel {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* ---- 施行日など ---- */
+.legal-meta {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid #ece8dd;
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+  text-align: right;
+}
+
+/* ---- トップへ戻る ---- */
+.legal-back-wrap {
+  text-align: center;
+  margin-top: var(--space-xl);
+}
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--color-white);
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+.legal-back:hover {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+/* ロゴをリンクにした際の装飾解除 */
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* フッターの現在ページ強調 */
+.footer-nav a[aria-current="page"] {
+  color: var(--color-white);
+  font-weight: 700;
+  text-decoration: underline;
+}
