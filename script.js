@@ -45,12 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       header.classList.remove('scrolled');
     }
 
-    // Fixed footer bar visibility
-    if (scrollY > 400) {
-      fixedFooterBar.classList.add('visible');
-    } else {
-      fixedFooterBar.classList.remove('visible');
-    }
+    // Fixed footer bar: 常に表示（電話・LINEへいつでもアクセスできるように）
+    fixedFooterBar.classList.add('visible');
 
     // Scroll top button
     if (scrollY > 600) {
