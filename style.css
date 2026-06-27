@@ -1114,12 +1114,16 @@ button {
   padding-bottom: env(safe-area-inset-bottom);
   background: var(--color-white);
   box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(100%);
+  transform: translate3d(0, 100%, 0);
   transition: transform 0.3s ease;
+  /* iOS Safari でスクロール中に固定要素が消えるのを防ぐ（GPUレイヤーに固定） */
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .fixed-footer-bar.visible {
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .fixed-bar-btn {
