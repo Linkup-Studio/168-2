@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260627b">
+  <link rel="stylesheet" href="style.css?v=20260628">
 
   <!-- 構造化データ -->
   <script type="application/ld+json">
@@ -195,61 +195,103 @@
         </div>
         <h2 class="section-title fade-in-up">はじめての方へ<br>ご利用の流れ</h2>
 
+        <!-- スタート：まずは相談 -->
+        <div class="flow-start fade-in-up">
+          <p class="flow-start-label">まずはお気軽にご相談ください</p>
+          <a href="tel:0566-95-9778" class="flow-start-tel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            0566-95-9778
+          </a>
+        </div>
+
+        <div class="flow-arrow" aria-hidden="true"></div>
+
+        <!-- 分岐：介護認定の有無 -->
+        <div class="flow-branch">
+          <div class="flow-branch-col fade-in-up">
+            <div class="flow-branch-head">介護認定をお持ちでない方</div>
+            <div class="flow-branch-steps">
+              <div class="flow-mini">
+                <h4>介護保険の申請</h4>
+                <p>お住まいの市役所の介護保険窓口で申請します。申請の代行も承りますので、お気軽にご相談ください。</p>
+              </div>
+              <div class="flow-mini">
+                <h4>要介護認定（認定調査）</h4>
+                <p>認定調査員がご自宅などを訪問し、認定調査を行います。</p>
+              </div>
+              <div class="flow-mini">
+                <h4>認定結果の通知</h4>
+                <p>要介護1〜5の認定結果が通知されます。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-branch-col fade-in-up">
+            <div class="flow-branch-head">すでに要介護認定をお持ちの方</div>
+            <div class="flow-branch-steps">
+              <div class="flow-mini">
+                <h4>要介護1〜5の方</h4>
+                <p>すでに認定をお持ちの方は、このまま次のステップへお進みいただけます。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="flow-note fade-in-up">※要支援1・要支援2の方は、地域包括支援センターが担当となります。</p>
+
+        <div class="flow-arrow" aria-hidden="true"></div>
+
+        <div class="flow-merge fade-in-up">ここからは共通の流れです</div>
+
+        <!-- 共通の流れ -->
         <div class="timeline">
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">1</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">お問い合わせ</h3>
-              <p>お電話またはLINEでお気軽にご連絡ください。ご本人でもご家族でも構いません。</p>
+              <h3 class="timeline-title">状況の把握（アセスメント）・ご契約</h3>
+              <p>ケアマネジャーがご自宅を訪問し、ご本人・ご家族に直接お会いして、心身の状態や生活環境などを把握します。ご質問・ご要望をうかがったうえで、ケアプラン彩心とご契約いただきます。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">2</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">初回面談</h3>
-              <p>ご自宅や病院へ訪問し、現在の生活状況やお困りごとを丁寧にお伺いします。</p>
+              <h3 class="timeline-title">情報提供とご提案</h3>
+              <p>アセスメントの内容をふまえ、介護サービス事業所のサービス内容や利用料などの情報をご提供します。ご相談のうえ、ご本人・ご家族にサービスをお選びいただきます。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">3</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">要介護認定の申請サポート</h3>
-              <p>認定を受けていない方は、申請の手続きを代行いたします。</p>
+              <h3 class="timeline-title">サービスとの連絡・調整</h3>
+              <p>必要なサービスがスムーズに受けられるよう、ケアマネジャーがサービス提供事業者と連絡・調整を行います。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">4</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">アセスメント</h3>
-              <p>生活状況を詳しく聞き取り、解決すべき課題を一緒に整理します。</p>
+              <h3 class="timeline-title">居宅サービス計画（ケアプラン）の作成</h3>
+              <p>ケアマネジャーが原案を作成し、ご本人・ご家族に内容をご説明します。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">5</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">ケアプラン原案の作成</h3>
-              <p>ご本人やご家族のご希望を反映した、オーダーメイドのケアプランをご提案します。</p>
+              <h3 class="timeline-title">サービス担当者会議</h3>
+              <p>ケアマネジャー、ご本人、ご家族、サービス事業所のスタッフが集まり、支援の方針を共有します。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">6</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">サービス担当者会議</h3>
-              <p>関係するサービス事業所の担当者と一堂に集まり、支援の方針を共有します。</p>
+              <h3 class="timeline-title">介護保険サービスの利用開始</h3>
+              <p>居宅サービス計画（ケアプラン）に沿って、各種サービスの利用がスタートします。</p>
             </div>
           </div>
           <div class="timeline-item fade-in-up">
             <div class="timeline-number">7</div>
             <div class="timeline-body">
-              <h3 class="timeline-title">サービス利用開始</h3>
-              <p>ケアプランに基づいて、各種介護サービスの利用がスタートします。</p>
-            </div>
-          </div>
-          <div class="timeline-item fade-in-up">
-            <div class="timeline-number">8</div>
-            <div class="timeline-body">
-              <h3 class="timeline-title">毎月のモニタリング</h3>
-              <p>定期的に訪問し、サービス内容の見直しや新たなご相談に対応します。</p>
+              <h3 class="timeline-title">モニタリングの実施（月1回）</h3>
+              <p>ケアマネジャーが定期的にご自宅を訪問し、サービスの実施状況や健康状態などを確認します。必要に応じて、サービスの見直しも行います。</p>
             </div>
           </div>
         </div>

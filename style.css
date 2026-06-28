@@ -687,6 +687,119 @@ button {
   line-height: var(--lh-base);
 }
 
+/* ご利用の流れ：スタート／分岐 */
+.flow-start {
+  text-align: center;
+  background: var(--color-accent-pale);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
+
+.flow-start-label {
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.flow-start-tel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-en);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.flow-start-tel svg {
+  width: 22px;
+  height: 22px;
+}
+
+.flow-arrow {
+  width: 0;
+  height: 0;
+  margin: 14px auto;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 13px solid var(--color-accent-light);
+}
+
+.flow-branch {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.flow-branch-col {
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
+
+.flow-branch-head {
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-white);
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: var(--space-md);
+  font-size: var(--fs-sm);
+}
+
+.flow-branch-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.flow-mini {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+}
+
+.flow-mini h4 {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 4px;
+}
+
+.flow-mini p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: var(--lh-base);
+}
+
+.flow-note {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+.flow-merge {
+  display: table;
+  margin: 0 auto var(--space-lg);
+  text-align: center;
+  font-weight: 700;
+  color: var(--color-accent);
+  background: var(--color-accent-pale);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: var(--fs-sm);
+}
+
+@media (min-width: 600px) {
+  .flow-branch {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
 /* ============================================
    5. STRENGTH (選ばれる理由)
    ============================================ */
