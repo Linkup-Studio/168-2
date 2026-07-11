@@ -465,6 +465,22 @@ button {
   padding: var(--space-xl) var(--space-lg) var(--space-sm);
 }
 
+.thought-photo-banner {
+  margin-top: var(--space-lg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.thought-photo-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
 .thought-img-wrap {
   width: 200px;
   height: 200px;
