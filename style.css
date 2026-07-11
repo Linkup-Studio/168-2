@@ -314,20 +314,23 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('./assets/images/hero.png');
+  background-image: url('./assets/images/hero-sunset.jpg');
   background-size: cover;
-  background-position: center;
-  filter: brightness(0.9);
+  background-position: center top;
   z-index: -1;
 }
 
+/* キャッチコピーは画像内に含まれるため、テキストはスクリーンリーダー向けにのみ残す */
 .hero-content {
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.85);
-  padding: clamp(36px, 10vw, 60px) clamp(20px, 6vw, 40px);
-  border-radius: 4px;
-  max-width: 600px;
-  margin: 0 20px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .hero-sub {
