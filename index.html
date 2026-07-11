@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260711">
+  <link rel="stylesheet" href="style.css?v=20260711b">
 
   <!-- 構造化データ -->
   <script type="application/ld+json">
@@ -62,7 +62,11 @@
   <main>
     <!-- ========== 1. ファーストビュー（1518版） ========== -->
     <section class="hero" id="hero">
-      <div class="hero-bg"></div>
+      <div class="hero-bg">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="./assets/images/hero-sunset.jpg" aria-hidden="true">
+          <source src="./assets/videos/hero-loop.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="hero-content">
         <p class="hero-sub">あなたらしい暮らしを、住み慣れた地域で。</p>
         <h2 class="hero-title">出逢いとご縁を<br>大切に。</h2>
