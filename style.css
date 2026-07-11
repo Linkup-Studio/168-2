@@ -466,19 +466,64 @@ button {
 }
 
 .thought-photo-banner {
+  position: relative;
   margin-top: var(--space-lg);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
+  font-family: var(--font-top);
 }
 
-.thought-photo-banner img {
-  display: block;
+.thought-banner-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
   object-position: center bottom;
+}
+
+.thought-banner-body {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-sm) var(--space-md) 90px;
+  text-align: center;
+}
+
+.thought-banner-label {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 16px rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-sm);
+}
+
+.thought-banner-card {
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-md);
+}
+
+.thought-banner-sub {
+  font-size: clamp(0.875rem, 3.8vw, 1rem);
+  color: var(--primary-color);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.thought-banner-title {
+  font-size: clamp(1.5rem, 7vw, 2.25rem);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 16px;
+}
+
+.thought-banner-desc {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--text-color);
 }
 
 .thought-img-wrap {
