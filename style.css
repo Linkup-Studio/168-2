@@ -688,6 +688,7 @@ button {
   font-size: var(--fs-xs);
   color: var(--color-text-light);
   line-height: var(--lh-base);
+  text-align: left;
 }
 
 /* ============================================
