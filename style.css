@@ -314,7 +314,7 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('./assets/images/hero-sunset.jpg?v=20260714b');
+  background-image: url('./assets/images/hero-sunset.jpg?v=20260714c');
   background-size: cover;
   background-position: center top;
   z-index: -1;
@@ -1457,6 +1457,9 @@ button {
 
   .hero {
     margin-top: 62px;
+    /* 引きの構図: 高さを抑えて動画の左右を広く見せる（馬の疾走エリアまで表示） */
+    height: 40svh;
+    min-height: 300px;
   }
 }
 
