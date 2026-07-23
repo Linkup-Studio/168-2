@@ -467,7 +467,7 @@ button {
 
 .thought-photo-banner {
   position: relative;
-  margin-top: var(--space-lg);
+  margin: var(--space-lg) 0 var(--space-md);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
