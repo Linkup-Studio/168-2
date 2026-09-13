@@ -65,3 +65,25 @@ a[href*="lin.ee"]:hover,
 .header { z-index: 100; }
 .nav { z-index: 10; }
 .menu-toggle { z-index: 100; }
+
+/* ══ 2026-09-13 追加（ひろ承認: 演出外し・B・D。Cは見送り）══ */
+/* ── 5. AIの定番の型: スクロールでふわっと出す演出（49か所）を外し、最初から表示する（クラス名は残す） ── */
+.fade-in-up { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
+
+/* ── B. 最初の画面に「誰向け・何が手に入る」の一文（ヒーロー下端の帯・文字18px） ── */
+.hero { flex-wrap: wrap; }
+.hero-tagline {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  margin: 0; padding: 10px 16px;
+  text-align: center; font-size: 18px; font-weight: 700; line-height: 1.5; letter-spacing: 0.04em;
+  color: #333333; background: rgba(248, 244, 230, 0.94); /* 節の地色（生成り）と同じ */
+}
+@media (max-width: 480px) { .hero-tagline { font-size: 16px; padding: 8px 12px; } }
+
+/* ── D. 連絡セクション: 全面の紅をやめ、地を生成りに。紅は見出しと電話番号の差し色だけに ── */
+.section-contact { background-color: #F8F4E6; }
+.contact-bg, .contact-overlay { display: none; }
+.contact-title { color: #C73E3A; }
+.contact-text { color: #333333; }
+.contact-hours { color: #666666; }
+.section-contact .btn-white { border: 1px solid #E0E0E0; }
