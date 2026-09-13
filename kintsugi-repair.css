@@ -1,0 +1,67 @@
+/* ══ 金継ぎ 追補スタイル（ケアプラン彩心 LP・2026-09-13・かい）══
+   使い方: このファイルを style.css の後に link で読み込むか、head の末尾に style 要素として貼る。
+   方針: 文言・構成・写真は変えない。色は既存色と「明度だけ動かした派生」だけ。節の地色（生成り/薄灰の拍）は残す。 */
+
+/* ── 1. 破れ: 低コントラスト（読める床まで） ── */
+/* 薄いグレーの補足文字 #999999（比2.85）→ 明度だけ落とした派生 #757575（比4.6） */
+.thought-name-title,
+.thought-name-main small,
+.area-note,
+.overview-row dd small { color: #666666; } /* 既存の --color-text-light（比5.7） */
+/* 「01/02」の飾り数字 #D6A485（比2.21）→ 同じ土色を深くした #A96F4A（比3.6・大文字床3.0） */
+.strength-num { color: #A96F4A; }
+/* 合流ラベル #C73E3A on #FAECEB（比4.37）→ 地を白に（紅×白＝比4.6・色は増やさない） */
+.flow-merge { background: #FFFFFF; }
+/* 「私たちの想い」の写真バナー: 半透明82%の白カードの上に紅文字（画素比3.1〜4.5）→ カードを94%にして床へ。
+   写真の上に直に置かれたラベル「ケアプラン彩心」は、ぼかしの白影では足りない（画素比3.1）→ 白の帯を敷く */
+.thought-banner-card { background: rgba(255, 255, 255, 0.94); }
+.thought-banner-label { display: inline-block; background: rgba(255, 255, 255, 0.94); padding: 4px 16px; border-radius: 999px; text-shadow: none; }
+/* 連絡セクション: 写真＋紅のオーバーレイの上の白文字。地色の宣言が無く計測が「白地×白文字」と誤読していたため、
+   オーバーレイと同じ紅を地色として宣言（画像が読めない環境の保険にもなる・見た目は不変） */
+.section-contact { background-color: #9A2C29; }
+/* フッター（#333333地）: 会社名 rgba白50%（比4.43）→ 55%へ／コピーライト 40%（比3.41）→ 55% */
+.footer-corp { color: rgba(255, 255, 255, 0.62); }
+.footer-copy { color: rgba(255, 255, 255, 0.62); }
+/* LINEボタン（3か所）: 白文字×#06C755（比2.26）。ブランド緑の色相を保ち明度だけ落とす #058A3C（比4.6） */
+.btn-line,
+a[href*="lin.ee"],
+.fixed-bar-line { background: #05833A; }
+.btn-line:hover,
+a[href*="lin.ee"]:hover,
+.fixed-bar-line:hover { background: #04702F; }
+
+/* ── 2. 乱れ: 文字サイズを役割ごとに揃える ── */
+/* h3系（h3/h4）: 16/18/20 → 18/20 */
+.service-card-title { font-size: 18px; }
+.flow-mini h4 { font-size: 18px; }
+/* 本文: 14/15.2/16/18/20/24/28/40 → 16/18/40 */
+.service-card-text { font-size: 16px; }
+.nav a { font-size: 18px; }
+.overview-row dd a { font-size: 18px; }
+.mid-cta-text { font-size: 18px; }
+.free-banner-price { font-size: 18px; }
+.footer-logo { font-size: 18px; }
+.footer-copy { font-size: 16px; }
+/* ボタン: 14/18/20/27.2 → 18/24（電話番号の大ボタンだけ24を残す） */
+.footer-nav a { font-size: 18px; }
+.btn-tel-text { font-size: 18px; }
+.btn-xl { font-size: 18px; }
+.flow-start-tel { font-size: 24px; }
+.fixed-footer-bar .fixed-bar-btn { font-size: 18px; }
+/* その他: 14/16/18/24/40 → 16/24/40 */
+.thought-name-title { font-size: 16px; }
+.timeline-number { font-size: 16px; }
+
+/* ── 2b. 読みやすさ: スマホでサービス3枚が1行9字の詰まりになる → 1列に（文言不変） ── */
+@media (max-width: 480px) {
+  .service-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 3. 乱れ: 角丸を3種へ（2/6/8/12/999 → 8/12/999） ── */
+#menu-toggle span, .menu-toggle span { border-radius: 0; }
+.flow-branch-head { border-radius: 8px; }
+
+/* ── 4. 乱れ: z-index を 3段（1/10/100）へ ── */
+.header { z-index: 100; }
+.nav { z-index: 10; }
+.menu-toggle { z-index: 100; }
