@@ -85,3 +85,19 @@ a[href*="lin.ee"]:hover,
 .contact-text { color: #333333; }
 .contact-hours { color: #666666; }
 .section-contact .btn-white { border: 1px solid #E0E0E0; }
+
+/* ══ 2026-09-13 公式LINEを廃止（ひろ指示）→ 問い合わせは電話のみ。ボタンの置き方を整える ══ */
+/* 連絡セクション: 電話ボタンを1つ・中央・主役の紅 */
+.contact-cta { align-items: center; justify-content: center; }
+.section-contact .btn-white {
+  background: #C73E3A; color: #FFFFFF; border: none;
+  min-width: 300px; padding: 18px 36px; box-shadow: 0 6px 20px rgba(199, 62, 58, 0.25);
+}
+.section-contact .btn-white:hover { background: #B4322E; }
+.section-contact .btn-tel-text { align-items: center; }
+.section-contact .btn-tel-text small { color: rgba(255, 255, 255, 0.9); }
+/* 中間CTA（紅の箱）: 白い電話ボタン1つを中央に */
+.mid-cta-buttons { align-items: center; justify-content: center; }
+.mid-cta-buttons .btn-primary { min-width: 280px; }
+/* スマホ固定バー: 電話ボタン1本を全幅・大きめ */
+.fixed-footer-bar .fixed-bar-btn { font-size: 18px; letter-spacing: 0.08em; }
