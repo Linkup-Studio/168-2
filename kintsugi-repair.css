@@ -95,7 +95,7 @@ a[href*="lin.ee"]:hover,
 }
 .section-contact .btn-white:hover { background: #B4322E; }
 .section-contact .btn-tel-text { align-items: center; }
-.section-contact .btn-tel-text small { color: rgba(255, 255, 255, 0.9); }
+.section-contact .btn-tel-text small { color: #FFFFFF; }
 /* 中間CTA（紅の箱）: 白い電話ボタン1つを中央に */
 .mid-cta-buttons { align-items: center; justify-content: center; }
 .mid-cta-buttons .btn-primary { min-width: 280px; }
