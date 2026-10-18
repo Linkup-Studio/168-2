@@ -671,7 +671,11 @@ button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
     $('jkCpu').textContent = HANDS[0]; $('jkYou').textContent = HANDS[0];
     $('jkMsg').textContent = 'じゃん けん…';
     setTimeout(() => {
-      const cpu = Math.floor(Math.random() * 3);
+      // たいようは てかげん する：だいたい きみが かつ。1かい まけたら あとは かならず かてる（3かい しょうぶは かならず かちこし）
+      const lost = jk.results.includes('lose');
+      const roll = Math.random();
+      const outcome = lost || roll < 0.75 ? 'win' : roll < 0.9 ? 'draw' : 'lose';
+      const cpu = outcome === 'win' ? (you + 1) % 3 : outcome === 'draw' ? you : (you + 2) % 3;
       const diff = (you - cpu + 3) % 3; // 0: あいこ, 2: きみの かち, 1: まけ
       $('jkCpu').textContent = HANDS[cpu]; $('jkYou').textContent = HANDS[you];
       $('jkCpu').className = 'jk-hand'; $('jkYou').className = 'jk-hand';
