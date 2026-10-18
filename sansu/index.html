@@ -200,7 +200,39 @@ button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 .foot { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: center; font-size: 14px; color: var(--muted); }
 
 /* ---------- せいちょう おめでとう ---------- */
-.overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 20px; background: rgba(20, 16, 12, .55); }
+.overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: rgba(20, 16, 12, .55); overflow-y: auto; }
+.panel { display: grid; gap: 8px; justify-items: center; width: 100%; }
+.overlay-card .sub { color: var(--muted); font-size: 16px; }
+
+/* ---------- じゃんけん ---------- */
+.jk-field { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; width: 100%; margin-top: 4px; }
+.jk-side { display: grid; justify-items: center; gap: 4px; font-weight: 700; font-size: 15px; color: var(--muted); }
+.jk-char { width: 112px; height: 112px; display: grid; place-items: center; }
+.jk-char svg { width: 100%; height: 100%; overflow: visible; }
+.jk-you { border-radius: 50%; border: 3px dashed var(--line); font-family: var(--font-hand); font-size: 26px; color: var(--sky); width: 80px; height: 80px; margin: 8px; }
+.jk-hand {
+  width: 92px; height: 92px; border-radius: 22px; border: 3px solid var(--ink); background: var(--paper);
+  display: grid; place-items: center; font-size: 52px; line-height: 1; font-weight: 900; color: var(--muted);
+}
+.jk-hand.shake { animation: fist .24s ease-in-out infinite; }
+.jk-hand.win { border-color: var(--ok); background: var(--ok-bg); }
+.jk-hand.lose { border-color: var(--line); opacity: .6; }
+@keyframes fist { 50% { transform: translateY(-8px) rotate(-6deg); } }
+.jk-vs { font-family: var(--font-hand); font-size: 26px; color: var(--sun-deep); }
+.jk-msg { font-size: 20px; min-height: 1.6em; text-wrap: balance; word-break: keep-all; }
+.jk-picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.jk-pick {
+  border: 3px solid var(--ink); background: var(--paper); border-radius: 18px; padding: 8px 0 6px;
+  display: grid; justify-items: center; gap: 2px; font-weight: 900; font-size: 16px;
+  box-shadow: 0 5px 0 var(--ink); transition: transform .08s, box-shadow .08s;
+}
+.jk-pick span { font-size: 40px; line-height: 1.1; }
+.jk-pick:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.jk-pick:disabled { opacity: .45; cursor: default; }
+.jk-stars { display: flex; gap: 10px; font-size: 30px; line-height: 1; }
+.jk-stars .w { color: var(--gold); }
+.jk-stars .l { color: var(--muted); }
+.jk-stars .p { color: var(--line); }
 .overlay-card {
   background: var(--card); border: 3px solid var(--ink); border-radius: 28px; padding: 22px 22px 26px;
   width: min(420px, 100%); display: grid; gap: 8px; justify-items: center; text-align: center;
@@ -281,10 +313,39 @@ button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 
 <div class="overlay" id="overlay" hidden>
   <div class="overlay-card" role="dialog" aria-modal="true" aria-labelledby="ovTitle">
-    <h2 id="ovTitle">たいようが そだったよ！</h2>
-    <div class="char-box" id="ovChar"></div>
-    <p id="ovText"></p>
-    <button class="btn primary" id="ovBtn" type="button">やったね！</button>
+    <div class="panel" id="growPanel">
+      <h2 id="ovTitle">たいようが そだったよ！</h2>
+      <div class="char-box" id="ovChar"></div>
+      <p id="ovText"></p>
+      <p class="sub">おいわいに じゃんけん しよう！</p>
+      <button class="btn primary" id="ovBtn" type="button">じゃんけんで あそぶ</button>
+    </div>
+
+    <div class="panel" id="jkPanel" hidden>
+      <h2>じゃんけん しょうぶ</h2>
+      <p class="sub" id="jkRound"></p>
+      <div class="jk-field">
+        <div class="jk-side">
+          <div class="jk-char" id="jkChar"></div>
+          <div class="jk-hand" id="jkCpu">?</div>
+          <span>たいよう</span>
+        </div>
+        <div class="jk-vs">VS</div>
+        <div class="jk-side">
+          <div class="jk-char jk-you" aria-hidden="true">きみ</div>
+          <div class="jk-hand" id="jkYou">?</div>
+          <span>きみ</span>
+        </div>
+      </div>
+      <p class="jk-msg" id="jkMsg" aria-live="polite">どれを だす？</p>
+      <div class="jk-picks" id="jkPicks">
+        <button type="button" class="jk-pick" data-h="0"><span aria-hidden="true">✊</span>グー</button>
+        <button type="button" class="jk-pick" data-h="1"><span aria-hidden="true">✌️</span>チョキ</button>
+        <button type="button" class="jk-pick" data-h="2"><span aria-hidden="true">🖐️</span>パー</button>
+      </div>
+      <div class="jk-stars" id="jkStars" aria-label="しょうぶの けっか"></div>
+      <button class="btn primary" id="jkDone" type="button" hidden>さんすうに もどる</button>
+    </div>
   </div>
 </div>
 
@@ -563,9 +624,90 @@ button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
   function levelUp(stage) {
     $('ovChar').innerHTML = charSVG(stage, 'happy');
     $('ovText').textContent = `「${STAGES[stage].name}」に なった！`;
+    $('growPanel').hidden = false;
+    $('jkPanel').hidden = true;
     $('overlay').hidden = false;
     chime(true, true);
     $('ovBtn').focus();
+  }
+
+  // ---------- じゃんけん ミニゲーム（せいちょう するたびに あそべる） ----------
+  const HANDS = ['✊', '✌️', '🖐️'];
+  const HAND_NAMES = ['グー', 'チョキ', 'パー'];
+  const JK_ROUNDS = 3;
+  let jk = { stage: 0, results: [], busy: false };
+
+  function jkRender(cpuMood = 'normal') {
+    $('jkChar').innerHTML = charSVG(jk.stage, cpuMood, false);
+    const n = jk.results.length;
+    $('jkRound').textContent = n < JK_ROUNDS ? `${JK_ROUNDS}かい しょうぶ の ${n + 1}かいめ` : `${JK_ROUNDS}かい しょうぶ おわり`;
+    let stars = '';
+    for (let i = 0; i < JK_ROUNDS; i++) {
+      const r = jk.results[i];
+      stars += r === 'win' ? '<span class="w">★</span>' : r === 'lose' ? '<span class="l">●</span>' : '<span class="p">○</span>';
+    }
+    $('jkStars').innerHTML = stars;
+  }
+
+  function jkStart() {
+    jk = { stage: stageOf(state.total), results: [], busy: false };
+    $('growPanel').hidden = true;
+    $('jkPanel').hidden = false;
+    $('jkCpu').textContent = '?'; $('jkYou').textContent = '?';
+    $('jkCpu').className = 'jk-hand'; $('jkYou').className = 'jk-hand';
+    $('jkMsg').textContent = 'どれを だす？';
+    $('jkDone').hidden = true;
+    document.querySelectorAll('.jk-pick').forEach((b) => { b.disabled = false; });
+    jkRender();
+    document.querySelector('.jk-pick').focus();
+  }
+
+  function jkPlay(you) {
+    if (jk.busy || jk.results.length >= JK_ROUNDS) return;
+    jk.busy = true;
+    const picks = document.querySelectorAll('.jk-pick');
+    picks.forEach((b) => { b.disabled = true; });
+    $('jkCpu').className = 'jk-hand shake'; $('jkYou').className = 'jk-hand shake';
+    $('jkCpu').textContent = HANDS[0]; $('jkYou').textContent = HANDS[0];
+    $('jkMsg').textContent = 'じゃん けん…';
+    setTimeout(() => {
+      const cpu = Math.floor(Math.random() * 3);
+      const diff = (you - cpu + 3) % 3; // 0: あいこ, 2: きみの かち, 1: まけ
+      $('jkCpu').textContent = HANDS[cpu]; $('jkYou').textContent = HANDS[you];
+      $('jkCpu').className = 'jk-hand'; $('jkYou').className = 'jk-hand';
+      if (diff === 0) {
+        $('jkMsg').textContent = `${HAND_NAMES[you]} と ${HAND_NAMES[cpu]}… あいこで しょ！`;
+        jkRender();
+      } else {
+        const win = diff === 2;
+        jk.results.push(win ? 'win' : 'lose');
+        $(win ? 'jkYou' : 'jkCpu').classList.add('win');
+        $(win ? 'jkCpu' : 'jkYou').classList.add('lose');
+        $('jkMsg').textContent = win ? 'ぽん！ きみの かち！' : 'ぽん！ たいようの かち！';
+        chime(win);
+        jkRender(win ? 'oops' : 'happy');
+      }
+      jk.busy = false;
+      if (jk.results.length >= JK_ROUNDS) return setTimeout(jkFinish, 900);
+      picks.forEach((b) => { b.disabled = false; });
+    }, 800);
+  }
+
+  function jkFinish() {
+    const wins = jk.results.filter((r) => r === 'win').length;
+    const msg = ['たいようの ぜんしょう！ また あそぼう', 'たいようの かち！ つぎは まけないよ', 'きみの かち！ やったね！', 'ぜんしょう！ じゃんけん めいじん だ！'][wins];
+    $('jkMsg').textContent = msg;
+    jkRender(wins >= 2 ? 'oops' : 'happy');
+    $('jkRound').textContent = `${JK_ROUNDS}かい ちゅう ${wins}かい かったよ`;
+    if (wins >= 2) chime(true, true);
+    $('jkDone').hidden = false;
+    $('jkDone').focus();
+  }
+
+  function closeOverlay() {
+    $('overlay').hidden = true;
+    $('bubble').textContent = 'たのしかった！ また そだててね';
+    newQuestion();
   }
 
   // ---------- おと ----------
@@ -598,7 +740,9 @@ button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
   });
   $('hintBtn').addEventListener('click', showHint);
   $('nextBtn').addEventListener('click', newQuestion);
-  $('ovBtn').addEventListener('click', () => { $('overlay').hidden = true; $('bubble').textContent = 'もっと そだてて！'; newQuestion(); });
+  $('ovBtn').addEventListener('click', jkStart);
+  $('jkPicks').addEventListener('click', (e) => { const b = e.target.closest('.jk-pick'); if (b && !b.disabled) jkPlay(Number(b.dataset.h)); });
+  $('jkDone').addEventListener('click', closeOverlay);
   $('soundBtn').addEventListener('click', () => { state.sound = !state.sound; save(); renderSound(); });
   let resetArmed = false, resetTimer = 0;
   $('resetBtn').addEventListener('click', () => {
